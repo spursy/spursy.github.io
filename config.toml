@@ -1,0 +1,29 @@
+base_url = "https://spursy.github.io"
+
+title = "Spursy's blog"
+description = "Make life better"
+
+generate_feeds = true
+
+compile_sass = true
+
+build_search_index = false
+
+theme = "anpu"
+
+[[taxonomies]]
+name = "categories"
+
+[[taxonomies]]
+name = "tags"
+
+[markdown]
+
+[markdown.highlighting]
+theme = "catppuccin-mocha"
+
+[extra]
+anpu_menu_links = [
+    { url = "$BASE_URL/tags/", name = "Tags" },
+    { url = "/pages/about", name = "About" },
+]
