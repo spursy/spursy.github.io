@@ -29,6 +29,9 @@ smart_punctuation = true
 bottom_footnotes = true
 
 [markdown.highlighting]
+# class 模式：输出 .z-* 类名，由 tabi 的语法主题着色（随皮肤/明暗自适应）
+# theme 仅用于满足配置要求，class 模式下其调色板不生效
+style = "class"
 theme = "catppuccin-mocha"
 
 # ============================================================
@@ -49,8 +52,6 @@ copy_button = true
 show_reading_time = true
 show_date = true
 mermaid = false
-# 代码高亮用内联样式（catppuccin-mocha），需关闭 CSP 以免被拦
-enable_csp = false
 remote_repository_url = "https://github.com/spursy/spursy.github.io"
 
 favicon_emoji = "🦀"

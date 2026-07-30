@@ -88,7 +88,7 @@ template = "info-page.html"
 
 - `default_language = "zh-Hans"`；英文在 `[languages.en]`。
 - `build_search_index = false`（顶层）——**Zola 的 elasticlunr 不支持中文分词**，默认语言开搜索会构建失败；英文可在 `[languages.en]` 单独开。
-- 代码高亮：`[markdown.highlighting] theme = "catppuccin-mocha"`（内联样式）配合 `[extra] enable_csp = false`——tabi 默认开 CSP 会拦内联高亮。
+- 代码高亮：`[markdown.highlighting] style = "class"`（+ `theme = "catppuccin-mocha"` 仅为满足 enum，class 模式下调色板不生效）。Zola 输出 `.z-*` 类名，由 tabi 的 `_syntax_theme.scss` 着色（随皮肤/明暗自适应、含圆角与复制按钮）。class 模式是 CSP-safe，**不要**再设 `enable_csp = false`。
 - 常用 `[extra]`：`skin`（配色皮肤 teal/blue/lavender/...）、`theme_switcher`、`copy_button`、`show_reading_time`、`menu`、`socials`、`favicon_emoji`。
 - 菜单 `menu` 里的 `name` 是 i18n 键（`blog`/`tags`/`about`…），会按语言自动翻译成 博客/标签/关于。
 
