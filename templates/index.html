@@ -13,6 +13,81 @@
     <link rel="stylesheet" href="{{ get_url(path="main.css", trailing_slash=false) }}">
 
     <style>
+        /* ===== 项目级样式覆盖（不改动 themes/anpu） ===== */
+
+        /* 1) 统一配色变量：消除主题里蓝/红/紫打架，统一为一个主色 */
+        body:not(.dark-mode) {
+            --accent: #2f6f9f;        /* 主色（沉稳蓝） */
+            --accent-hover: #1d4e73;  /* hover 更深 */
+            --muted: #6b7280;
+            --border-soft: #ececec;
+        }
+        body.dark-mode {
+            --accent: #7fb4de;
+            --accent-hover: #a9d0ee;
+            --muted: #9aa0a6;
+            --border-soft: #333333;
+        }
+        @media (prefers-color-scheme: light) {
+            body { --accent:#2f6f9f; --accent-hover:#1d4e73; --muted:#6b7280; --border-soft:#ececec; }
+        }
+        @media (prefers-color-scheme: dark) {
+            body { --accent:#7fb4de; --accent-hover:#a9d0ee; --muted:#9aa0a6; --border-soft:#333; }
+        }
+
+        /* 2) 标题类字体：华文行楷（系统字体，零加载）；无此字体的设备回退楷体/衬线 */
+        .site-header,
+        .site-header a,
+        main h1, main h2, main h3,
+        article header h1, article header h1 a {
+            font-family: 'STXingkai', '华文行楷', 'KaiTi', '楷体', serif;
+            letter-spacing: 0.02em;
+        }
+        /* 站点标题加粗 */
+        .site-header, .site-header a { font-weight: 700; }
+
+        /* 3) 中文排版：更松的行高、段距，正文略放宽（仅桌面端，避免撑破移动端） */
+        body { line-height: 1.75; }
+        main p { margin-top: 0.9em; margin-bottom: 0.9em; }
+        @media (min-width: 841px) {
+            .container { max-width: 46em; }
+        }
+
+        /* 链接统一主色 + 平滑过渡 */
+        a { color: var(--accent); transition: color .15s ease, border-color .15s ease; }
+        a:hover, a:focus, a:active, a.active {
+            color: var(--accent-hover);
+            border-bottom: 1px solid var(--accent-hover);
+        }
+        .article-info a:hover, .pagination-item a:hover { color: var(--accent-hover); border-bottom: 0; }
+
+        /* 3) 代码块：圆角 + 更舒展的行高（fenced code 的深色底由 catppuccin-mocha 内联提供，此处只补细节） */
+        pre {
+            border-radius: 8px;
+            padding: 1em 1.2em;
+            line-height: 1.6;
+        }
+        /* 行内 code 暗色适配（浅灰底在暗色下会刺眼） */
+        body.dark-mode code { background-color: #2b2b3c; }
+
+        /* 引用块：主色左边线 + 柔和文字 */
+        blockquote {
+            color: var(--muted);
+            border-left: 3px solid var(--accent);
+        }
+
+        /* 图片：圆角 + 轻微阴影 */
+        article img {
+            border-radius: 8px;
+            box-shadow: 0 1px 6px rgba(0,0,0,.08);
+        }
+
+        /* 4) 暗色模式细节补齐：表格 / 分隔线 / 边框 */
+        th, td { border: 1px solid var(--border-soft); }
+        body.dark-mode thead { background: #2a2a2a; }
+        article:not(:last-of-type) { border-bottom: thin solid var(--border-soft); }
+        footer { border-top: thin solid var(--border-soft); }
+
         /* 语言切换器：整体离菜单 2em，但内部「中文 / EN」紧凑 */
         header nav .lang-switcher { margin-left: 2em; }
         header nav .lang-switcher a,
