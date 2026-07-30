@@ -1,6 +1,7 @@
 +++
 title = "About"
 description = "About me page"
+template = "info-page.html"
 +++
 
 Hi, I am Spursy 👋

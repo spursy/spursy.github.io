@@ -1,6 +1,7 @@
 +++
 title = "关于"
 description = "关于我"
+template = "info-page.html"
 +++
 
 你好，我是 Spursy 👋

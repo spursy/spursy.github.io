@@ -2,43 +2,65 @@ base_url = "https://spursy.github.io"
 
 title = "Spursy's blog"
 description = "Make life better"
+author = "Spursy"
 
-# 默认语言为中文（不带 URL 前缀），英文版位于 /en/ 下
-default_language = "zh"
+# tabi 主题：中文界面需使用 zh-Hans / zh-Hant（主题 i18n 无 "zh"）
+default_language = "zh-Hans"
 
 generate_feeds = true
-
 compile_sass = true
-
+minify_html = true
+# 默认语言中文：Zola 的 elasticlunr 搜索不支持中文分词，故关闭默认语言的搜索索引
 build_search_index = false
 
-theme = "anpu"
+theme = "tabi"
 
-[[taxonomies]]
-name = "categories"
+taxonomies = [{ name = "tags", feed = true }]
 
-[[taxonomies]]
-name = "tags"
+[search]
+include_title = true
+include_description = true
+include_path = true
+include_content = true
+index_format = "elasticlunr_json"
 
 [markdown]
+smart_punctuation = true
+bottom_footnotes = true
 
 [markdown.highlighting]
 theme = "catppuccin-mocha"
 
-[extra]
-anpu_menu_links = [
-    { url = "$BASE_URL/tags/", name = "Tags" },
-    { url = "$BASE_URL/pages/about/", name = "About" },
-]
-
 # ============================================================
-# 英文语言配置
+# 英文语言配置（/en/）
 # ============================================================
 [languages.en]
 title = "Spursy's blog"
 description = "Make life better"
 generate_feeds = true
-taxonomies = [
-    { name = "categories" },
-    { name = "tags" },
+build_search_index = true
+taxonomies = [{ name = "tags", feed = true }]
+
+[extra]
+# 配色皮肤：blue / lavender / mint / red / sakura / teal / monochrome / indigo_ingot / evangelion ...
+skin = "teal"
+theme_switcher = true
+copy_button = true
+show_reading_time = true
+show_date = true
+mermaid = false
+# 代码高亮用内联样式（catppuccin-mocha），需关闭 CSP 以免被拦
+enable_csp = false
+remote_repository_url = "https://github.com/spursy/spursy.github.io"
+
+favicon_emoji = "🦀"
+
+menu = [
+    { name = "blog", url = "blog", trailing_slash = true },
+    { name = "tags", url = "tags", trailing_slash = true },
+    { name = "about", url = "pages/about", trailing_slash = true },
+]
+
+socials = [
+    { name = "github", url = "https://github.com/ai-aide", icon = "github" },
 ]
