@@ -12,6 +12,14 @@
 
     <link rel="stylesheet" href="{{ get_url(path="main.css", trailing_slash=false) }}">
 
+    <style>
+        /* 语言切换器：整体离菜单 2em，但内部「中文 / EN」紧凑 */
+        header nav .lang-switcher { margin-left: 2em; }
+        header nav .lang-switcher a,
+        header nav .lang-switcher .active { margin-left: 0; }
+        header nav .lang-switcher .active { font-weight: bold; }
+    </style>
+
     {% if config.generate_feeds %}
         <link rel="alternate" type={% if config.feed_filenames[0] == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="RSS" href="{{ get_url(path=config.feed_filenames[0]) | safe }}">
     {% endif %}
@@ -28,10 +36,33 @@
             </h1>
             <nav>
                 {% block sidebar_nav %}
+                {# 当前语言前缀：默认语言无前缀，其它语言形如 /en #}
+                {% if lang and lang != config.default_language %}{% set lang_base = config.base_url ~ "/" ~ lang %}{% else %}{% set lang_base = config.base_url %}{% endif %}
                 {% for menu_link in config.extra.anpu_menu_links %}
-                {% set link_url = menu_link.url | replace(from="$BASE_URL", to=config.base_url) %}
+                {% set link_url = menu_link.url | replace(from="$BASE_URL", to=lang_base) %}
                 <a {% if current_url and current_url == link_url %}class="active"{% endif %} href="{{ link_url }}">{{menu_link.name}}</a>
                 {% endfor %}
+
+                {# ---- 语言切换器：链到当前页的另一语言版本，无译文则回退到该语言首页 ---- #}
+                {% set_global zh_url = get_url(path="@/_index.md") %}
+                {% set_global en_url = get_url(path="@/_index.md", lang="en") %}
+                {% if page %}
+                    {% for t in page.translations %}
+                        {% if t.lang == "en" %}{% set_global en_url = t.permalink %}{% endif %}
+                        {% if t.lang == "zh" %}{% set_global zh_url = t.permalink %}{% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if section %}
+                    {% for t in section.translations %}
+                        {% if t.lang == "en" %}{% set_global en_url = t.permalink %}{% endif %}
+                        {% if t.lang == "zh" %}{% set_global zh_url = t.permalink %}{% endif %}
+                    {% endfor %}
+                {% endif %}
+                <span class="lang-switcher">
+                    {% if lang == "zh" %}<span class="active">中文</span>{% else %}<a href="{{ zh_url }}">中文</a>{% endif %}
+                    /
+                    {% if lang == "en" %}<span class="active">EN</span>{% else %}<a href="{{ en_url }}">EN</a>{% endif %}
+                </span>
                 {% endblock sidebar_nav %}
             </nav>
         </header>

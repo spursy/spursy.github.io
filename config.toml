@@ -3,6 +3,9 @@ base_url = "https://spursy.github.io"
 title = "Spursy's blog"
 description = "Make life better"
 
+# 默认语言为中文（不带 URL 前缀），英文版位于 /en/ 下
+default_language = "zh"
+
 generate_feeds = true
 
 compile_sass = true
@@ -25,5 +28,17 @@ theme = "catppuccin-mocha"
 [extra]
 anpu_menu_links = [
     { url = "$BASE_URL/tags/", name = "Tags" },
-    { url = "/pages/about", name = "About" },
+    { url = "$BASE_URL/pages/about/", name = "About" },
+]
+
+# ============================================================
+# 英文语言配置
+# ============================================================
+[languages.en]
+title = "Spursy's blog"
+description = "Make life better"
+generate_feeds = true
+taxonomies = [
+    { name = "categories" },
+    { name = "tags" },
 ]

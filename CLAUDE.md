@@ -70,6 +70,18 @@ description = "页面描述"
 - 正文语言随文章主题，可中文可英文。
 - slug（文件名）用英文。
 
+## 多语言（中文 / 英文）
+
+本站已开启 Zola 多语言：**默认语言中文（`/` 无前缀），英文位于 `/en/`**。配置见 `config.toml` 的 `default_language = "zh"` 与 `[languages.en]`。
+
+写双语文章的规则：
+1. 中文版正常命名：`content/<slug>.md`。
+2. 英文版加 `.en.md` 后缀、**同一个 slug**：`content/<slug>.en.md`。二者 front-matter 各自独立（`title` 用对应语言），`date` / `slug` 保持一致才能互相识别为译文。
+3. section 与页面同理需成对：`content/_index.md` ↔ `content/_index.en.md`，`content/pages/about.md` ↔ `content/pages/about.en.md`。
+4. 只写单语言也可以：没有 `.en.md` 的文章只出现在中文站，不影响构建。
+5. 语言切换器已在 `templates/index.html` 的 `<nav>` 里实现：自动链到当前页的另一语言版本，无译文时回退到该语言首页。导航菜单（Tags/About）也会按当前语言自动加 `/en` 前缀。
+6. 新增 / 修改这两处需要注意：`config.toml` 的 `[languages.en]`（含 `taxonomies`），以及 `templates/index.html` 的语言前缀逻辑。**Zola 不支持按语言配置 `[extra]`**，所以菜单的语言感知是在模板里用 `lang` 变量做的，不要试图写 `[languages.en.extra]`（会报 `unknown field extra`）。
+
 ## 本地预览 / 构建
 
 ```bash
