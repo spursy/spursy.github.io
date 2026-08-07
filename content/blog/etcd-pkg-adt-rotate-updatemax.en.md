@@ -1,6 +1,6 @@
 +++
 title = "etcd pkg/adt Interval Tree (Part 2): Maintaining max After Rotations, and updateMax's Early Termination"
-date = 2026-08-06
+date = 2026-08-07
 description = "Part 1 covered the interval tree's query side — Insert plants max, Intersects/Stab prune with it. This part adds the maintenance side: red-black rotations reshuffle subtree membership, so the cached max must be recomputed. We dissect when rotateLeft/rotateRight call updateMax, why it must start from the lower node, and how the one line if old==m break compresses O(height) to O(1~2)."
 [taxonomies]
 tags = ["etcd"]
