@@ -10,7 +10,7 @@ toc = true
 
 一个命令行工具写完了，怎么让别人装上？「clone 下来自己 `cargo build`」显然不行。成熟的做法是：**每次打一个 git tag，CI 自动为所有平台编译二进制、打包上传到包仓库，用户一条 `curl … | sh` 就装好**。
 
-这篇以 [tool-terminal](https://github.com/spursy/tool-terminal)（一个演示用的 Rust CLI，二进制名 `tool`）为例，把这条流水线拆成三段讲清楚：本地发版（Makefile）、CI 构建上传（GitLab CI）、用户安装（install.sh）。每一段都有几个容易踩的坑，一并记下来。
+这篇以 [tool-terminal](https://github.com/spursy/cli-terminal)（一个演示用的 Rust CLI，二进制名 `tool`）为例，把这条流水线拆成三段讲清楚：本地发版（Makefile）、CI 构建上传（GitLab CI）、用户安装（install.sh）。每一段都有几个容易踩的坑，一并记下来。
 
 <!-- more -->
 
@@ -244,7 +244,7 @@ release-version:
 用户侧的目标是一条命令:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/spursy/tool-terminal/refs/heads/master/scripts/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/spursy/cli-terminal/refs/heads/master/scripts/install.sh | sh
 ```
 
 `-fsSL` 这四个 flag 缺一不可:`-f` 让 HTTP 错误(如 404)直接失败而不是把错误页喂给 sh;`-s` 静默;`-S` 出错时仍打印原因;`-L` 跟随重定向。这是「下载脚本喂给 shell」的标准安全写法。

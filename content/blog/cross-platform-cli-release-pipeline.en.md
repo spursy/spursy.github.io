@@ -10,7 +10,7 @@ toc = true
 
 You finished a command-line tool — now how do people install it? "Clone it and `cargo build` yourself" clearly won't do. The mature approach: **every time you push a git tag, CI compiles binaries for every platform, packages and uploads them to a registry, and users install with a single `curl … | sh`**.
 
-This post uses [tool-terminal](https://github.com/spursy/tool-terminal) (a demo Rust CLI whose binary is named `tool`) to break that pipeline into three parts: local release (Makefile), CI build & upload (GitLab CI), and user install (install.sh). Each part has a few easy traps, noted along the way.
+This post uses [tool-terminal](https://github.com/spursy/cli-terminal) (a demo Rust CLI whose binary is named `tool`) to break that pipeline into three parts: local release (Makefile), CI build & upload (GitLab CI), and user install (install.sh). Each part has a few easy traps, noted along the way.
 
 <!-- more -->
 
@@ -246,7 +246,7 @@ release-version:
 The user-facing goal is a single command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/spursy/tool-terminal/refs/heads/master/scripts/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/spursy/cli-terminal/refs/heads/master/scripts/install.sh | sh
 ```
 
 None of the four `-fsSL` flags are optional: `-f` makes an HTTP error (e.g. 404) fail rather than feeding the error page to sh; `-s` is silent; `-S` still prints the reason on error; `-L` follows redirects. This is the standard safe idiom for "download a script and pipe it to a shell".
