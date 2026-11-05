@@ -32,7 +32,90 @@ Actor 模式换了一个角度:**既然共享才需要加锁,那就干脆不共�
 
 ## 二、Actor 是什么:状态只归一个任务
 
-看 `examples/actor_counter.rs`。它用三样东西搭出一个 Actor,全程没有 `Arc`、没有锁:
+看 `examples/actor_counter.rs`。完整的例子只有几十行,先看全貌,再拆开讲:
+
+```rust
+//! Rust (tokio) 里的 Actor 模式:一个计数器 actor 独占自己的状态,
+//! 完全由消息驱动——没有 `Arc<Mutex<_>>`,也没有锁。
+//!
+//! 这个 actor 是一个被 spawn 出来的任务,独占 `count`;调用方只能往它的
+//! 信箱(一个 `mpsc` 通道)里发 `CounterMsg`。`Get` 带一个 `oneshot::Sender`,
+//! 让调用方可以 await 到回信——于是单向消息变成了一次请求/响应调用。
+//!
+//! 运行:
+//!   cargo run --example actor_counter
+
+use tokio::sync::{mpsc, oneshot};
+
+/// Actor 接受的消息(它的「接口」)。
+enum CounterMsg {
+    Increment,
+    /// 带一个一次性回信通道,调用方可以 await 到值。
+    Get(oneshot::Sender<i64>),
+}
+
+/// Actor 本体:只有它独占 `count`,所以永远不需要锁。
+async fn counter_actor(mut mailbox: mpsc::Receiver<CounterMsg>) {
+    let mut count: i64 = 0;
+    while let Some(msg) = mailbox.recv().await {
+        match msg {
+            CounterMsg::Increment => count += 1,
+            CounterMsg::Get(reply) => {
+                let _ = reply.send(count);
+            }
+        }
+    }
+}
+
+/// 可克隆的句柄:只暴露「发消息」,从不暴露状态本身。
+#[derive(Clone)]
+struct CounterHandle {
+    sender: mpsc::Sender<CounterMsg>,
+}
+
+impl CounterHandle {
+    fn new() -> Self {
+        let (tx, rx) = mpsc::channel(32);
+        tokio::spawn(counter_actor(rx));
+        Self { sender: tx }
+    }
+
+    async fn increment(&self) {
+        let _ = self.sender.send(CounterMsg::Increment).await;
+    }
+
+    async fn get(&self) -> i64 {
+        let (tx, rx) = oneshot::channel();
+        let _ = self.sender.send(CounterMsg::Get(tx)).await;
+        rx.await.expect("actor dropped the reply channel")
+    }
+}
+
+#[tokio::main]
+async fn main() {
+    let counter = CounterHandle::new();
+
+    // 克隆句柄,从多个任务并发驱动它。
+    // 没有锁,没有数据竞争——每次修改都在 actor 内部串行发生。
+    let c1 = counter.clone();
+    let c2 = counter.clone();
+    let h1 = tokio::spawn(async move {
+        for _ in 0..100 {
+            c1.increment().await;
+        }
+    });
+    let h2 = tokio::spawn(async move {
+        for _ in 0..100 {
+            c2.increment().await;
+        }
+    });
+    let _ = tokio::join!(h1, h2);
+
+    println!("final count = {}", counter.get().await); // 200
+}
+```
+
+它用三样东西搭出一个 Actor,全程没有 `Arc`、没有锁:
 
 **1) 消息枚举——Actor 的「接口」**
 
