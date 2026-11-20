@@ -1,6 +1,6 @@
 +++
 title = "抛开浏览器画 UI：从 Electron/Tauri 的取舍到 GPUI 与 gpui-kit"
-date = 2026-11-19
+date = 2026-11-20
 description = "桌面开发者想要 Web 的效率，又不想要 Electron/Tauri 的性能与架构妥协。本文先拆 Electron 与 Tauri 的实现原理与共同局限，详解浏览器的 Style→Layout→Paint→Composite 渲染流水线；再讲 GPUI 如何用一条「帧流水线」把它整条替换掉，以及 60/120fps 与 GPU 为什么快、gpui-kit 怎么调用 GPU；最后说清 GPUI 自绘范式的困局，以及 gpui-kit 如何用分层设计把它填平。"
 [taxonomies]
 tags = ["rust", "gpui", "ui", "gpui-kit", "performance"]

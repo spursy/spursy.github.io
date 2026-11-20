@@ -1,6 +1,6 @@
 +++
 title = "Drawing UI Without a Browser: From Electron/Tauri's Trade-offs to GPUI and gpui-kit"
-date = 2026-11-19
+date = 2026-11-20
 description = "Desktop developers want the web's productivity without Electron/Tauri's performance and architecture compromises. This post dissects how Electron and Tauri work and where they stall, walks the browser's Style→Layout→Paint→Composite pipeline step by step, then shows how GPUI replaces that whole pipeline with a single frame pipeline — covering what 60/120fps means, why the GPU is so fast, and how gpui-kit talks to it. Finally: GPUI's own dilemma, and how gpui-kit's layered design fills it in."
 [taxonomies]
 tags = ["rust", "gpui", "ui", "gpui-kit", "performance"]
